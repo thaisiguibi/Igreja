@@ -1,0 +1,36 @@
+from fastapi import APIRouter
+from services import users as user_service
+from models.users import UserCreate, UserResponse
+from typing import List
+from models.users import LoginRequest
+
+router = APIRouter(prefix="/auth")
+
+@router.get("/", response_model=list[UserResponse])
+def list_users(limit: int = 10, offset: int = 0):
+    return user_service.list_users(limit, offset)
+
+@router.post("/", response_model=UserResponse)
+def create_user(user: UserCreate):
+    return user_service.create_user(user)
+
+@router.get("/{user_id}", response_model=UserResponse)
+def get_user(user_id: int):
+    return user_service.get_user(user_id)
+
+@router.get("/name/{name}", response_model=UserResponse)
+def get_user_by_name(name: str):
+    return user_service.get_user_by_name(name)
+
+@router.delete("/{user_id}")
+def delete_user(user_id: int):
+    return user_service.delete_user(user_id)
+
+@router.post("/login")
+def login(data: LoginRequest):
+    return user_service.login(data.name, data.password)
+
+@router.post("/register")
+def register(name: str, password: str):
+    user_id = user_service.create_user(name, password)
+    return {"user_id": user_id}
