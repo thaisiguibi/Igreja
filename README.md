@@ -1,58 +1,87 @@
-# API Igreja
+API Igreja
 
-## Descrição
-API REST para gerenciamento de usuários e posts com autenticação JWT.
+Backend desenvolvido com FastAPI para gerenciamento de usuários e posts, com autenticação via JWT e controle de acesso.
 
-## Tecnologias
+
+● Funcionalidades
+
+- Cadastro e autenticação de usuários
+- Geração de token JWT
+- CRUD de posts
+- Proteção de rotas (autorização por usuário)
+- Paginação de resultados
+- Padronização de respostas da API
+
+
+
+● Autenticação
+
+A API utiliza JWT (JSON Web Token).
+
+Fluxo:
+
+1. Usuário realiza login
+2. Recebe um token
+3. Envia token nas rotas protegidas via:
+
+Authorization: Bearer <token>
+
+
+
+● Estrutura do Projeto
+
+routers/       → rotas da API
+services/      → regras de negócio
+repository/    → acesso ao banco
+models/        → schemas (Pydantic)
+core/          → segurança (JWT, hash)
+
+
+
+● Tecnologias
+
 - FastAPI
 - SQLite
-- JWT
+- Pydantic
+- Passlib
+- Uvicorn
 
-## Funcionalidades
-- Cadastro e login de usuários
-- CRUD de posts
-- Autenticação com token
-- Paginação
 
-## Como rodar
 
-```bash
-pip install -r requirements.txt
-uvicorn main:app --reload
+● Deploy
 
-## Arquitetura
+API publicada via Render.
 
-- routers → endpoints (entrada HTTP)
-- services → regras de negócio
-- repository → acesso ao banco
-- core → segurança (JWT, hash, deps)
 
-## Fluxo
 
-Request → Router → Service → Repository → DB
+● Melhorias futuras (Backend)
 
-## Autenticação
+- [ ] Uso de variáveis de ambiente (.env)
+- [ ] Expiração e refresh token
+- [ ] Tratamento global de exceções
+- [ ] Logs estruturados
+- [ ] Testes automatizados
+- [ ] Migração de SQLite para PostgreSQL
+- [ ] Dockerização da aplicação
 
-- login gera JWT
-- token enviado no header
-- Depends extrai user_id
-- rotas usam user autenticado
 
-## Regras importantes
+● Funcionalidades futuras
 
-- posts não fazem login
-- users não conhecem posts
-- auth não acessa banco direto
+- [ ] Sistema de newsletter (inscrição de usuários)
+- [ ] Envio de notificações
+- [ ] Sistema de eventos (ex: novo post gera aviso)
 
-## Endpoints
 
-### Auth
-POST /auth/register
-POST /auth/login
+● Aprendizados
 
-### Posts
-GET /posts
-GET /posts/{id}
-POST /posts
-PATCH /posts/{id}
-DELETE /posts/{id}
+Este projeto foi desenvolvido com foco em aprendizado de backend, incluindo:
+
+- Arquitetura em camadas
+- Autenticação e autorização
+- Consumo de API via Swagger
+- Deploy em ambiente cloud
+
+
+● Autora
+
+Projeto desenvolvido por Thais
