@@ -5,11 +5,14 @@ from core.db import init_db
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
+from routers import newsletter
+from fastapi import HTTPException
 
 app = FastAPI()
 
 app.include_router(posts.router)
 app.include_router(users.router)
+app.include_router(newsletter.router)
 
 init_db()
 
@@ -18,8 +21,8 @@ async def http_exception_handler(request: Request, exc: StarletteHTTPException):
     return JSONResponse(
             status_code=exc.status_code,
             content={
-                "error": exc.detail,
-                "status": exc.status_code
+                "data": None,
+                "message": exc.detail
                 }
             )
 
@@ -28,8 +31,9 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
     return JSONResponse(
             status_code=422,
             content={
-                "error": "Invalid data",
-                "details": exc.errors()
+                "data": None,
+                "message": "Erro de validação",
+                "error": exc.errors()
                 }
             )
 
@@ -38,6 +42,18 @@ async def generic_exception_handler(request: Request, exc: Exception):
     return JSONResponse(
             status_code=500,
             content={
-                "error": "Internal server error"
+                "data": None,
+                "message": "Erro interno de servidor"
                 }
-            )   
+            )  
+
+
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+        )

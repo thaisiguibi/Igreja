@@ -1,0 +1,73 @@
+<!DOCTYPE html><html>
+    <head>
+            <meta charset="UTF-8">
+                <title>API Igreja</title>
+    </head>
+    <body><h1>API Igreja</h1><!-- LOGIN --><h2>Login</h2>
+        <input id="name" placeholder="Nome">
+        <input id="password" type="password" placeholder="Senha">
+        <button onclick="login()">Login</button>
+        <p id="loginStatus"></p><hr><!-- NEWSLETTER --><h2>Newsletter</h2>
+        <input id="email" placeholder="Email">
+        <button onclick="subscribe()">Inscrever</button>
+        <p id="newsletterStatus"></p><hr><!-- POSTS --><h2>Posts</h2>
+        <button onclick="loadPosts()">Carregar Posts</button>
+        <ul id="posts"></ul><script>
+            const API = "https://api-igreja-xfmj.onrender.com"
+
+            let token = ""
+
+            function login() {
+                    fetch(API + "/users/login", {
+                                method: "POST",
+                                headers: {"Content-Type": "application/json"},
+                                body: JSON.stringify({
+                                                name: document.getElementById("name").value,
+                                                password: document.getElementById("password").value
+                                            })
+                            })
+                    .then(res => res.json())
+                    .then(data => {
+                                if (data.access_token) {
+                                                token = data.access_token
+                                                document.getElementById("loginStatus").innerText = "Logado com sucesso"
+                                            } else {
+                                                            document.getElementById("loginStatus").innerText = data.message || "Erro no login"
+                                                        }
+                            })
+            }
+
+            function subscribe() {
+                    fetch(API + "/newsletter/subscribe", {
+                                method: "POST",
+                                headers: {"Content-Type": "application/json"},
+                                body: JSON.stringify({
+                                                email: document.getElementById("email").value
+                                            })
+                            })
+                    .then(res => res.json())
+                    .then(data => {
+                                document.getElementById("newsletterStatus").innerText = data.message
+                            })
+            }
+
+            function loadPosts() {
+                    fetch(API + "/posts")
+                    .then(res => res.json())
+                    .then(data => {
+                                const list = document.getElementById("posts")
+                                list.innerHTML = ""
+
+                                if (data.data && data.data.items) {
+                                                data.data.items.forEach(post => {
+                                                                    const li = document.createElement("li")
+                                                                    li.innerText = post.title + " - " + post.content
+                                                                    list.appendChild(li)
+                                                                })
+                                            } else {
+                                                            list.innerHTML = "<li>Nenhum post encontrado</li>"
+                                                        }
+                            })
+            }
+        </script></body>
+</html>

@@ -3,10 +3,14 @@ from datetime import datetime, timedelta
 from passlib.context import CryptContext
 from fastapi import Depends, HTTPException
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+import os
+from dotenv import load_dotenv
 
-SECRET_KEY = "segredo_super_forte"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 1
+load_dotenv()
+
+SECRET_KEY = os.getenv("SECRET_KEY")
+ALGORITHM = os.getenv("ALGORITHM")
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
 
 security = HTTPBearer()
 
