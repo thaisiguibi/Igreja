@@ -8,9 +8,32 @@ from core.security import create_access_token
 
 router = APIRouter(prefix="/users")
 
+@router.post("/login")
+def login(data: LoginRequest):
+    return user_service.login(data.name, data.password)
+
+@router.post("/register")
+def register(user: UserCreate):
+    user = user_service.create_user(user.name, user.password)
+
+    return ResponseModel(
+            data=user,
+            message="User registered"
+            )
+
+@router.get("/name/{name}")
+def get_user_by_name(name: str):
+    user =  user_service.get_user_by_name(name)
+
+    return ResponseModel(
+            data=user,
+            message="Username found"
+            )
+
 @router.get("/")
 def list_users(limit: int = 10, offset: int = 0):
     users, total = user_service.list_users(limit, offset)
+
     return ResponseModel(
             data = {
                 "items": users,
@@ -30,15 +53,6 @@ def get_user(user_id: int):
             message="User found"
             )
 
-@router.get("/name/{name}")
-def get_user_by_name(name: str):
-    user =  user_service.get_user_by_name(name)
-
-    return ResponseModel(
-            data=user,
-            message="Username found"
-            )
-
 @router.delete("/{user_id}")
 def delete_user(user_id: int):
     user = user_service.delete_user(user_id)
@@ -46,17 +60,4 @@ def delete_user(user_id: int):
     return ResponseModel(
             data=user,
             message="User deleted"
-            )
-
-@router.post("/login")
-def login(data: LoginRequest):
-    return user_service.login(data.name, data.password)
-
-@router.post("/register")
-def register(user: UserCreate):
-    user = user_service.create_user(user.name, user.password)
-
-    return ResponseModel(
-            data=user,
-            message="User registered"
             )
