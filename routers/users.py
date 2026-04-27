@@ -4,6 +4,7 @@ from models.users import UserCreate, UserResponse
 from typing import List
 from models.users import LoginRequest
 from models.common import ResponseModel
+from core.security import create_access_token
 
 router = APIRouter(prefix="/users")
 
@@ -17,7 +18,7 @@ def list_users(limit: int = 10, offset: int = 0):
                 "limit": limit,
                 "offset": offset
                 },
-            messages="Users listed"
+            message="Users listed"
             )
 
 @router.get("/{user_id}")
@@ -38,15 +39,6 @@ def get_user_by_name(name: str):
             message="Username found"
             )
 
-@router.get("/")
-def list_users(limit: int = 10, offset: int = 0):
-    user =  user_service.list_users(limit, offset)
-
-    return ResponseModel(
-            data=user,
-            message="List users"
-            )
-
 @router.delete("/{user_id}")
 def delete_user(user_id: int):
     user = user_service.delete_user(user_id)
@@ -58,12 +50,7 @@ def delete_user(user_id: int):
 
 @router.post("/login")
 def login(data: LoginRequest):
-    user = user_service.login(data.name, data.password)
-
-    return ResponseModel(
-            data=user,
-            message="User logon"
-            )
+    return user_service.login(data.name, data.password)
 
 @router.post("/register")
 def register(user: UserCreate):

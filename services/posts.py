@@ -28,6 +28,7 @@ def delete_post(post_id, user_id):
 
     post = post_repository.delete_post(post_id)
 
+    return True
 
 def update_post(post_id, title, content, user_id):
     post  = post_repository.get_post_raw(post_id)

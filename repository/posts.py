@@ -45,7 +45,7 @@ def get_posts(limit, offset, title=None, order="asc"):
         query += "ORDER BY p.id ASC "
 
 #paginação
-    query += " LIMIT ? OFFSET? "
+    query += " LIMIT ? OFFSET ? "
     params.extend([limit, offset])
 
     cursor.execute(query, params)
@@ -54,24 +54,6 @@ def get_posts(limit, offset, title=None, order="asc"):
     conn.close()
 
     return rows
-    
-
-def create_post(title, content, user_id):
-    conn = get_connection()
-    cursor = conn.cursor()
-    
-    cursor.execute(
-            """
-            INSERT INTO posts (title, content, user_id, active)
-            VALUES (?, ?, ?, 1)
-            """,
-            (title, content, user_id)
-            )
-    conn.commit()
-    post_id = cursor.lastrowid
-    conn.close()
- 
-    return post_id
 
 def delete_post(post_id):
     conn = get_connection()
@@ -86,7 +68,7 @@ def delete_post(post_id):
     
     return True
 
-def get_post_by_id(post_id):
+def get_post(post_id):
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -148,8 +130,8 @@ def count_posts(title=None):
         query += " AND title LIKE ?"
         params.append(f"%{title}%")
 
-        cursor.execute(query, params)
-        total = cursor.fetchone()[0]
+    cursor.execute(query, params)
+    total = cursor.fetchone()[0]
 
-        conn.close()
-        return total
+    conn.close()
+    return total

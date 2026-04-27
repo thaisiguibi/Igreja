@@ -8,9 +8,16 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-SECRET_KEY = os.getenv("SECRET_KEY")
-ALGORITHM = os.getenv("ALGORITHM")
-ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
+def get_env(name: str):
+    value = os.getenv(name)
+    if not value:
+        raise Exception(f"{name} não definido")
+    return value
+
+SECRET_KEY = get_env("SECRET_KEY")
+ALGORITHM = get_env("ALGORITHM")
+ACCESS_TOKEN_EXPIRE_MINUTES = int(get_env("ACCESS_TOKEN_EXPIRE_MINUTES"))
+
 
 security = HTTPBearer()
 
@@ -46,15 +53,17 @@ def verify_token(token: str):
     except JWTError:
         return None
 
+def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
+                                  token = credentials.credentials
 
-def get_current_user(credentials:HTTPAuthorizationCredentials=Depends(security)):
-    token = credentials.credentials
-    try:
-        payload = jwt.decode(
-                token, 
-                SECRET_KEY, 
-                algorithms=[ALGORITHM])
-        return payload["user_id"]
+                                  payload = verify_token(token)
 
-    except JWTError:
-        raise HTTPException(401, "Invalid or expired token")
+                                  if not payload:
+                                        raise HTTPException(status_code=401, detail="Invalid or expired")
+
+                                  user_id = payload.get("user_id")
+                                  
+                                  if not user_id:
+                                        raise HTTPException(status_code=401, detail="Invalid token payload")
+
+                                  return user_id

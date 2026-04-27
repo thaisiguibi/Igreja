@@ -1,4 +1,4 @@
-l}che__/
-*.pyc
-*.db
 .env
+__pycache__/
+*.db
+.venv/

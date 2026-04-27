@@ -6,9 +6,18 @@ from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from routers import newsletter
-from fastapi import HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+import traceback
 
 app = FastAPI()
+app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+        )
+
 
 app.include_router(posts.router)
 app.include_router(users.router)
@@ -45,15 +54,16 @@ async def generic_exception_handler(request: Request, exc: Exception):
                 "data": None,
                 "message": "Erro interno de servidor"
                 }
-            )  
+            )
 
+@app.exception_handler(Exception)
+async def generic_exception_handler(request: Request, exc: Exception):
+    print(traceback.format_exc())  # 👈 loga erro real
 
-from fastapi.middleware.cors import CORSMiddleware
-
-app.add_middleware(
-        CORSMiddleware,
-        allow_origins=["*"],
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-        )
+    return JSONResponse(
+            status_code=500,
+            content={
+                "data": None,
+                "message": "Erro interno de servidor"
+                }
+            )
