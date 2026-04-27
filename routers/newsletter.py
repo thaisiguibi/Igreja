@@ -5,7 +5,7 @@ from models.common import ResponseModel
 
 router = APIRouter(prefix="/newsletter")
 
-@router.post("/subscribe")
+@router.post("/")
 
 def subscribe(data: NewsletterCreate):
     newsletter_service.subscribe(data.email)

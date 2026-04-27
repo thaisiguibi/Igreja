@@ -1,134 +1,33 @@
-<!DOCTYPE html><html>
+<!DOCTYPE html>
+<html>
     <head>
         <meta charset="UTF-8">
-<title>App Igreja</title><style>
-body {
-        font-family: Arial;
-            padding: 20px;
-                background: #f5f5f5;
-}
+        <title>App Igreja</title>
+    </head>
 
-h1 { text-align: center; }
+    <body>
 
-.box {
-        background: white;
-            padding: 15px;
-                margin-bottom: 15px;
-                    border-radius: 8px;
-}
+        <h2>Login</h2>
+        <input id="name" placeholder="Nome">
+        <input id="password" type="password" placeholder="Senha">
+        <button onclick="login()">Login</button>
 
-input {
-        width: 100%;
-            padding: 8px;
-                margin: 5px 0;
-}
+        <h2>Criar Post</h2>
+        <input id="title" placeholder="Título">
+        <input id="content" placeholder="Conteúdo">
+        <button onclick="createPost()">Criar</button>
 
-button {
-        padding: 10px;
-            width: 100%;
-                background: #007bff;
-                    color: white;
-                        border: none;
-                            border-radius: 5px;
-}
+        <h2>Posts</h2>
+        <button onclick="loadPosts()">Carregar</button>
+        <ul id="posts"></ul>
 
-button:hover {
-        background: #0056b3;
-}
+        <p id="msg"></p>
 
-#msg {
-        margin-top: 10px;
-            font-weight: bold;
-}
+        <h2>Newsletter</h2>
+        <input id="email" placeholder="Seu email">
+        <button onclick="subscribe()">Inscrever</button>
+        
+        <script src="app.js"></script>
 
-li {
-        margin-bottom: 5px;
-}
-</style></head><body><h1>📘 App Igreja</h1><div class="box">
-            <h3>Login</h3>
-                <input id="name" placeholder="Nome">
-                    <input id="password" type="password" placeholder="Senha">
-                        <button onclick="login()">Entrar</button>
-    </div><div class="box">
-            <h3>Criar Post</h3>
-                <input id="title" placeholder="Título">
-                    <input id="content" placeholder="Conteúdo">
-                        <button onclick="createPost()">Criar Post</button>
-    </div><div class="box">
-            <h3>Posts</h3>
-                <button onclick="loadPosts()">Atualizar Lista</button>
-                    <ul id="posts"></ul>
-</div><p id="msg"></p><script>
-const API = "http://localhost:8000"
-
-// ================= LOGIN =================
-function login() {
-        fetch(API + "/users/login", {
-                    method: "POST",
-                    headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify({
-                                    name: document.getElementById("name").value,
-                                    password: document.getElementById("password").value
-                                })
-                })
-        .then(res => res.json())
-        .then(data => {
-                    if (data.access_token) {
-                                    localStorage.setItem("token", data.access_token)
-                                    showMsg("Login realizado")
-                                } else {
-                                                showMsg("Erro no login")
-                                            }
-                })
-}
-
-// ================= CREATE POST =================
-function createPost() {
-        const token = localStorage.getItem("token")
-
-        fetch(API + "/posts", {
-                    method: "POST",
-                    headers: {
-                                    "Content-Type": "application/json",
-                                    "Authorization": "Bearer " + token
-                                },
-                    body: JSON.stringify({
-                                    title: document.getElementById("title").value,
-                                    content: document.getElementById("content").value
-                                })
-                })
-        .then(res => res.json())
-        .then(data => {
-                    if (data.data) {
-                                    showMsg("Post criado")
-                                    loadPosts()
-                                } else {
-                                                showMsg("Erro ao criar post")
-                                            }
-                })
-}
-
-// ================= LIST POSTS =================
-function loadPosts() {
-        fetch(API + "/posts")
-        .then(res => res.json())
-        .then(data => {
-                    const list = document.getElementById("posts")
-                    list.innerHTML = ""
-
-                    const posts = data.data.itens || []
-
-                    posts.forEach(p => {
-                                    const li = document.createElement("li")
-                                    li.innerText = p.title + " - " + p.content
-                                    list.appendChild(li)
-                                })
-                })
-}
-
-// ================= MSG =================
-function showMsg(text) {
-        document.getElementById("msg").innerText = text
-}
-</script></body>
+    </body>
 </html>
