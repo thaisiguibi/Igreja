@@ -15,6 +15,17 @@ def init_db():
     cursor = conn.cursor()
 
     cursor.execute("DROP TABLE IF EXISTS posts")
+    cursor.execute("DROP TABLE IF EXISTS users")
+    cursor.execute("DROP TABLE IF EXISTS newsletter")
+
+    cursor.execute("""
+    CREATE TABLE users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL,
+    active INTEGER DEFAULT 1
+    )
+                   """)
 
     cursor.execute("""
     CREATE TABLE posts (
@@ -23,16 +34,15 @@ def init_db():
     content TEXT,
     user_id INTEGER,
     active INTEGER DEFAULT 1
-    )
-                   """)
+    )   
+                    """)
 
-    cursor.execute ("""
-    CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT UNIQUE NOT NULL,
-        password TEXT NOT NULL,
-        active INTEGER DEFAULT 1
-        )
+    cursor.execute("""
+    CREATE TABLE newsletter (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT UNIQUE NOT NULL,
+    active INTEGER DEFAULT 1
+    )
                     """)
 
     conn.commit()
