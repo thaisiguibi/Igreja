@@ -6,9 +6,9 @@ def subscribe(email):
         newsletter_repository.create_subscription(email)
         return True
 
-    except:
-        raise HTTPException(400, "Email já cadastrado")
-
+    except Exception as e:
+        print(e)
+        raise HTTPException(500, "Erro ao cadastrar email")
 
 def list_subscribers():
         return newsletter_repository.get_subscribers()
