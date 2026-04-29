@@ -4,19 +4,27 @@ def get_users(limit, offset):
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute(
-    """
+    cursor.execute("""
     SELECT id, name, active
     FROM users
     WHERE active = 1
     LIMIT ? OFFSET ?
-    """, (limit, offset)
-    )
+                   """, (limit, offset))
 
     rows = cursor.fetchall()
 
+
+    cursor.execute("""
+    SELECT COUNT(*)
+    FROM users
+    WHERE active = 1
+                   """)
+    total = cursor.fetchone()[0]
+
     conn.close()
-    return rows
+
+    return [dict(r) for r in rows], total
+
 
 def create_user(name, password):
     conn = get_connection()

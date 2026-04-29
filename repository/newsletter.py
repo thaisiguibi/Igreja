@@ -30,7 +30,4 @@ def get_subscribers():
     rows = cursor.fetchall()
     conn.close()
 
-
-    return [{"id": r[0], 
-             "email": r[1]} 
-            for r in rows]
+    return [dict(r) for r in rows]
