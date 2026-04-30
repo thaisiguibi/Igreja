@@ -14,32 +14,31 @@ def get_post(post_id: int):
             }
 
 @router.post("/")
-def create_post(post: PostCreate,
-                user_id: int = Depends(get_current_user)
-                ):
-    result =  post_service.create_post(post, user_id)
-
-    return {
-            "data": result,
-            "message": "Post Criado"
-            }
+def create_post(
+    data: PostCreate,
+    current_user: int = Depends(get_current_user)
+):
+    return post_service.create_post(data, current_user)
 
 @router.delete("/{post_id}")
-def delete_post(post_id: int, user_id: int = Depends(get_current_user)):
-    post_service.delete_post(post_id, user_id)
+def delete_post(
+    post_id: int,
+    current_user: int = Depends(get_current_user)
+):
+    return post_service.delete_post(post_id, current_user)
 
-    return {
-            "data": True,
-            "message": "Post deletado"
-            }
-
-@router.patch("/{post_id}")
-def update_post(post_id: int, post: PostUpdate, user_id: int = Depends(get_current_user)):
-    result = post_service.update_post(post_id, post.title, post.content, user_id)
-    return {
-            "data": result,
-            "message": "Post atualizado"
-            }
+@router.put("/{post_id}")
+def update_post(
+    post_id: int,
+    data: PostUpdate,
+    current_user: int = Depends(get_current_user)
+):
+    return post_service.update_post(
+        post_id,
+        data.title,
+        data.content,
+        current_user
+    )
 
 @router.get("/")
 def list_posts(

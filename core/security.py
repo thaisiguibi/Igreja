@@ -44,26 +44,24 @@ def create_access_token(data: dict):
 
 def verify_token(token: str):
     try:
-        payload = jwt.decode(token,
-                             SECRET_KEY, 
-                             algorithms=[ALGORITHM]
-                             )
+        payload = jwt.decode(
+            token,
+            SECRET_KEY,
+            algorithms=[ALGORITHM]
+        )
         return payload
 
     except JWTError:
-        return None
+        raise HTTPException(401, "Invalid or expired token")
+
 
 def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
-                                  token = credentials.credentials
+    token = credentials.credentials
+    payload = verify_token(token)
 
-                                  payload = verify_token(token)
+    user_id = payload.get("user_id")
 
-                                  if not payload:
-                                        raise HTTPException(status_code=401, detail="Invalid or expired")
+    if not user_id:
+        raise HTTPException(401, "Invalid token payload")
 
-                                  user_id = payload.get("user_id")
-                                  
-                                  if not user_id:
-                                        raise HTTPException(status_code=401, detail="Invalid token payload")
-
-                                  return user_id
+    return user_id

@@ -11,7 +11,9 @@ def login(name, password):
         raise HTTPException(401, "Invalid credentials")
 
     token = create_access_token({"user_id": user["id"]})
-    return {"access_token": token}
+    return {"access_token": token,
+            "token_type": "bearer"
+            }
 
 def create_user(name, password):
     existing = user_repository.get_user_by_name(name)
@@ -21,17 +23,15 @@ def create_user(name, password):
     hashed = hash_password(password)
     return user_repository.create_user(name, hashed)
 
-def list_users (limit, offset):
-    users =  user_repository.get_users(limit, offset)
-    total = user_repository.count_users()
+def list_users(limit, offset):
+    users, total = user_repository.get_users(limit, offset)
 
-    return users, total
-
-def delete_user(user_id):
-    user = user_repository.get_user(user_id)
-    if not user:
-        return {"error": "user not found"}
-    return user_repository.deactivate_user(user_id)
+    return {
+        "items": users,
+        "total": total,
+        "limit": limit,
+        "offset": offset
+    }
 
 def get_user(user_id):
     user = user_repository.get_user(user_id)
@@ -50,3 +50,17 @@ def get_user_by_name(name):
                 detail="User name not found"
                 )
     return user
+
+
+def delete_user(user_id, current_user):
+    user = user_repository.get_user(user_id)
+
+    if not user:
+        raise HTTPException(404, "User not found")
+
+    if user_id != current_user:
+        raise HTTPException(403, "Not allowed")
+
+    user_repository.deactivate_user(user_id)
+
+    return True

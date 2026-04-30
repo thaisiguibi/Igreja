@@ -31,3 +31,19 @@ def get_subscribers():
     conn.close()
 
     return [dict(r) for r in rows]
+
+
+def get_subscriber_by_email(email):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT id, email
+        FROM newsletter
+        WHERE email = ?
+    """, (email,))
+
+    row = cursor.fetchone()
+    conn.close()
+
+    return dict(row) if row else None

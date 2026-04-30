@@ -9,12 +9,12 @@ def get_post(post_id):
     return post
 
 
-def create_post(post, user_id):
+def create_post(data, user_id):
     post_id = post_repository.create_post(
-            post.title,
-            post.content,
-            user_id
-            )
+        data.title,
+        data.content,
+        user_id
+    )
     return post_repository.get_post(post_id)
 
 
@@ -46,7 +46,11 @@ def update_post(post_id, title, content, user_id):
     return post_repository.get_post(post_id)
 
 def list_posts(limit, offset, title, order):
-    posts = post_repository.get_posts(limit, offset, title, order)
-    total = post_repository.count_posts(title)
+    posts, total = post_repository.get_posts(limit, offset, title, order)
 
-    return posts, total
+    return {
+        "items": posts,
+        "total": total,
+        "limit": limit,
+        "offset": offset
+    }

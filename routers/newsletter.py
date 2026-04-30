@@ -7,20 +7,12 @@ router = APIRouter(prefix="/newsletter")
 
 @router.post("/")
 
+@router.post("/subscribe")
 def subscribe(data: NewsletterCreate):
-    newsletter_service.subscribe(data.email)
-
-    return ResponseModel(
-            data=True,
-            message="Inscrição realizada com sucesso"
-            )
-
+    return newsletter_service.subscribe(data.email)
 
 @router.get("/")
-def list_subscribers():
-    result = newsletter_service.list_subscribers()
-
-    return {
-            "data": result,
-            "message": "Emails listados"
-            }
+def list_subscribers(
+    current_user: int = Depends(get_current_user)
+):
+    return newsletter_service.list_subscribers()

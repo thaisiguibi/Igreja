@@ -25,6 +25,13 @@ app.include_router(newsletter.router)
 
 init_db()
 
+@app.get("/")
+def home():
+    return {
+        "message": "API Igreja online 🚀",
+        "docs": "/docs"
+
+
 @app.exception_handler(StarletteHTTPException)
 async def http_exception_handler(request: Request, exc: StarletteHTTPException):
     return JSONResponse(
