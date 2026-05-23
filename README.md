@@ -1,87 +1,166 @@
-API Igreja
+# Igreja API
 
-Backend desenvolvido com FastAPI para gerenciamento de usuários e posts, com autenticação via JWT e controle de acesso.
+Backend de uma aplicação paroquial desenvolvido com FastAPI.
 
+## Tecnologias
 
-● Funcionalidades
+- Python
+- FastAPI
+- SQLite
+- JWT Authentication
+- Uvicorn
+- HTML/CSS/JavaScript
+- Render
+- GitHub
 
-- Cadastro e autenticação de usuários
-- Geração de token JWT
-- CRUD de posts
-- Proteção de rotas (autorização por usuário)
-- Paginação de resultados
-- Padronização de respostas da API
+---
 
+# Funcionalidades
 
+## Usuários
+- Cadastro
+- Login com JWT
+- Listagem
+- Desativação lógica
 
-● Autenticação
+## Posts
+- Criar posts autenticados
+- Atualizar posts
+- Deletar posts
+- Listagem com paginação
+- Busca por título
 
-A API utiliza JWT (JSON Web Token).
+## Newsletter
+- Cadastro de emails
+- Listagem de inscritos
+
+---
+
+# Estrutura do projeto
+
+```bash
+app/
+├── core/
+├── models/
+├── repository/
+├── routers/
+├── services/
+├── main.py
+└── igreja.db
+```
+
+---
+
+# Instalação
+
+## Clonar projeto
+
+```bash
+git clone git@github.com:SEU_USUARIO/SEU_REPOSITORIO.git
+```
+
+---
+
+## Criar ambiente virtual
+
+```bash
+python -m venv venv
+```
+
+Ativar:
+
+### Linux / Termux
+
+```bash
+source venv/bin/activate
+```
+
+### Windows
+
+```bash
+venv\Scripts\activate
+```
+
+---
+
+## Instalar dependências
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+# Variáveis de ambiente
+
+Criar arquivo `.env`
+
+```env
+SECRET_KEY=sua_chave
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=60
+```
+
+---
+
+# Rodar aplicação
+
+```bash
+uvicorn main:app --reload
+```
+
+---
+
+# Documentação Swagger
+
+Acesse:
+
+```txt
+http://127.0.0.1:8000/docs
+```
+
+---
+
+# Autenticação
+
+A API utiliza JWT Bearer Token.
 
 Fluxo:
 
-1. Usuário realiza login
-2. Recebe um token
-3. Envia token nas rotas protegidas via:
+1. Registrar usuário
+2. Fazer login
+3. Copiar access_token
+4. Autorizar no Swagger
+5. Consumir rotas protegidas
 
-Authorization: Bearer <token>
+---
 
+# Deploy
 
+Deploy realizado no:
 
-● Estrutura do Projeto
+- Render
 
-routers/       → rotas da API
-services/      → regras de negócio
-repository/    → acesso ao banco
-models/        → schemas (Pydantic)
-core/          → segurança (JWT, hash)
+Versionamento:
 
+- GitHub
 
+---
 
-● Tecnologias
+# Melhorias futuras
 
-- FastAPI
-- SQLite
-- Pydantic
-- Passlib
-- Uvicorn
+- Frontend completo
+- Upload de imagens
+- Painel administrativo
+- Roles de usuário
+- Cache
+- Docker
+- PostgreSQL
+- Refresh token
+- Rate limiting
 
+---
 
+# Licença
 
-● Deploy
-
-API publicada via Render.
-
-
-
-● Melhorias futuras (Backend)
-
-- [ ] Uso de variáveis de ambiente (.env)
-- [ ] Expiração e refresh token
-- [ ] Tratamento global de exceções
-- [ ] Logs estruturados
-- [ ] Testes automatizados
-- [ ] Migração de SQLite para PostgreSQL
-- [ ] Dockerização da aplicação
-
-
-● Funcionalidades futuras
-
-- [ ] Sistema de newsletter (inscrição de usuários)
-- [ ] Envio de notificações
-- [ ] Sistema de eventos (ex: novo post gera aviso)
-
-
-● Aprendizados
-
-Este projeto foi desenvolvido com foco em aprendizado de backend, incluindo:
-
-- Arquitetura em camadas
-- Autenticação e autorização
-- Consumo de API via Swagger
-- Deploy em ambiente cloud
-
-
-● Autora
-
-Projeto desenvolvido por Thais
+Projeto educacional.
