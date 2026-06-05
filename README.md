@@ -56,7 +56,7 @@ app/
 ## Clonar projeto
 
 ```bash
-git clone git@github.com:SEU_USUARIO/SEU_REPOSITORIO.git
+git clone git@github.com:thaisiguibi/Igreja.git
 ```
 
 ---
