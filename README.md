@@ -1,6 +1,19 @@
 # Igreja API
+Aplicação backend desenvolvida em Python e FastAPI para gerenciamento de avisos
+paroquiais.
+O projeto foi criado como estudo de arquitetura de APIs e boas práticas de
+desenvolvimento, utilizando autenticação JWT, organização em camadas (Routers, Services
+e Repository) e banco de dados SQLite.
+Além do backend, o projeto prevê uma interface web em desenvolvimento, com o objetivo de
+evoluir para uma Progressive Web App (PWA), permitindo que comunidades paroquiais
+publiquem e consultem avisos de forma simples.
 
-Backend de uma aplicação paroquial desenvolvido com FastAPI.
+## Objetivos do projeto
+- Estudar desenvolvimento de APIs com FastAPI.
+- Aplicar arquitetura em camadas.
+- Implementar autenticação utilizando JWT.
+- Praticar modelagem de banco de dados com SQLite.
+- Desenvolver uma base para evolução de uma aplicação PWA.
 
 ## Tecnologias
 
@@ -37,6 +50,7 @@ Backend de uma aplicação paroquial desenvolvido com FastAPI.
 ---
 
 # Estrutura do projeto
+O projeto foi organizado utilizando separação de responsabilidades:
 
 ```bash
 app/
@@ -48,6 +62,7 @@ app/
 ├── main.py
 └── igreja.db
 ```
+Essa organização facilita a manutenção, os testes e a evolução da aplicação conforme novas funcionalidades são adicionadas.
 
 ---
 
@@ -164,3 +179,14 @@ Versionamento:
 # Licença
 
 Projeto educacional.
+
+## O que aprendi
+
+Este projeto permitiu praticar:
+
+- Desenvolvimento de APIs REST
+- Organização em camadas
+- Autenticação JWT
+- Modelagem de banco de dados
+- Paginação e busca
+- Estruturação de projetos Python
