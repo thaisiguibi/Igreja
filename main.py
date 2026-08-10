@@ -30,7 +30,7 @@ def home():
     return {
         "message": "API Igreja online 🚀",
         "docs": "/docs"
-
+        }
 
 @app.exception_handler(StarletteHTTPException)
 async def http_exception_handler(request: Request, exc: StarletteHTTPException):

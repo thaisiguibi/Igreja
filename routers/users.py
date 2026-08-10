@@ -1,10 +1,11 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from services import users as user_service
 from models.users import UserCreate, UserResponse
 from typing import List
 from models.users import LoginRequest
 from models.common import ResponseModel
 from core.security import create_access_token
+from core.security import get_current_user
 
 router = APIRouter(prefix="/users")
 

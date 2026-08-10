@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>App Igreja</title>
+    </head>
+
+    <body>
+
+        <h2>Login</h2>
+        <input id="name" placeholder="Nome">
+        <input id="password" type="password" placeholder="Senha">
+        <button onclick="login()">Login</button>
+
+        <h2>Criar Post</h2>
+        <input id="title" placeholder="Título">
+        <input id="content" placeholder="Conteúdo">
+        <button onclick="createPost()">Criar</button>
+
+        <h2>Posts</h2>
+        <button onclick="loadPosts()">Carregar</button>
+        <ul id="posts"></ul>
+
+        <p id="msg"></p>
+
+        <h2>Newsletter</h2>
+        <input id="email" placeholder="Seu email">
+        <button onclick="subscribe()">Inscrever</button>
+        
+        <script src="app.js"></script>
+
+    </body>
+</html>

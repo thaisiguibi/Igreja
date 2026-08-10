@@ -42,18 +42,9 @@ def update_post(
 
 @router.get("/")
 def list_posts(
-        limit: int = 10, 
-        offset: int = 0,
-        title: str | None = None,
-        order: str = "asc"
-        ):
-    posts, total = post_service.list_posts(limit, offset, title, order)
-    return ResponseModel(
-            data={
-                    "itens":posts,
-                    "total":total,
-                    "limit":limit,
-                    "offset":offset
-                },
-            message = "Posts listados"
-             )
+    limit: int = 10,
+    offset: int = 0,
+    title: str | None = None,
+    order: str = "asc"
+):
+    return post_service.list_posts(limit, offset, title, order)
