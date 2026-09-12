@@ -1,25 +1,64 @@
-<!DOCTYPE html><html lang="pt-BR">
+<!DOCTYPE html>
+<html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Administração</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administração</title>
 
-</head><body><h1>Área administrativa</h1>
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    >
+</head>
 
-<div>
-    <label for="name">Usuário</label>
-    <input type="text" id="name">
-</div>
+<body>
 
-<div>
-    <label for="password">Senha</label>
-    <input type="password" id="password">
-</div>
+    <main class="container">
 
-<button onclick="login()">Entrar</button>
+        <h1>Área administrativa</h1>
 
-<div id="msg"></div>
+        <form onsubmit="login(); return false;">
 
-<script src="app.js"></script>
+            <label for="name">
+                Usuário
+                <input type="text" id="name" required>
+            </label>
+
+            <label for="password">
+                Senha
+                <input type="password" id="password" required>
+            </label>
+
+            <button type="submit">Entrar</button>
+
+        </form>
+
+        <hr>
+
+        <h2>Novo aviso</h2>
+
+        <form onsubmit="createPost(); return false;">
+
+            <label for="title">
+                Título
+                <input type="text" id="title" required>
+            </label>
+
+            <label for="content">
+                Conteúdo
+                <textarea id="content" required></textarea>
+            </label>
+
+            <button type="submit">Publicar aviso</button>
+
+        </form>
+
+        <div id="msg"></div>
+
+    </main>
+
+    <script src="app.js"></script>
 
 </body>
 </html>

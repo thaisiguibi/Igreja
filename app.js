@@ -5,7 +5,9 @@ function show(msg) {
     document.getElementById("msg").innerText = msg
 }
 
+
 // ===== TOKEN =====
+
 function getToken() {
     return localStorage.getItem("token")
 }
@@ -24,6 +26,7 @@ function authHeaders() {
     }
 }
 
+
 // ===== LOGIN =====
 
 async function login() {
@@ -40,11 +43,17 @@ async function login() {
 
     const data = await res.json()
 
-    show(JSON.stringify(data))
-    return
+    if (res.ok) {
+        localStorage.setItem("token", data.access_token)
+        show("Login realizado")
+    } else {
+        show(data.message || "Erro ao fazer login")
+    }
 }
 
+
 // ===== CREATE POST =====
+
 async function createPost() {
     try {
         const res = await fetch(API + "/posts/", {
@@ -59,11 +68,11 @@ async function createPost() {
         const data = await res.json()
         console.log(data)
 
-        if (data.data) {
+        if (res.ok) {
             show("Post criado")
             loadPosts()
         } else {
-            show("Erro ao criar post")
+            show(data.message || "Erro ao criar post")
         }
 
     } catch (err) {
@@ -73,6 +82,7 @@ async function createPost() {
 
 
 // ===== SUBSCRIBE =====
+
 async function subscribe() {
     const email = document.getElementById("email").value
 
@@ -98,8 +108,6 @@ async function subscribe() {
     }
 }
 
-
-// ===== LIST POSTS =====
 
 // ===== LIST POSTS =====
 
