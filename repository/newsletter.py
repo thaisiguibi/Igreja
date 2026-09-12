@@ -1,15 +1,14 @@
-from core.db import get_connection
+from core.db import get_connection, execute
 
 def create_subscription(email):
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("""
+    execute(cursor, """
     INSERT INTO newsletter (email, active)
     VALUES (?, 1)
-                   """, 
-                   (email,)
-                   )
+            """, (email,)
+            )
     conn.commit()
     conn.close()
 
@@ -20,12 +19,12 @@ def get_subscribers():
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("""
+    execute(cursor, """
     SELECT id, email
     FROM newsletter
     WHERE active = 1
-                   """
-                   )
+            """
+            )
 
     rows = cursor.fetchall()
     conn.close()
@@ -37,11 +36,12 @@ def get_subscriber_by_email(email):
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("""
+    execute(cursor, """
         SELECT id, email
         FROM newsletter
         WHERE email = ?
-    """, (email,))
+            """, (email,)
+            )
 
     row = cursor.fetchone()
     conn.close()

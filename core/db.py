@@ -4,44 +4,89 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 DB_PATH = os.path.join(BASE_DIR, "igreja.db")
 
+DATABASE_URL = os.getenv("DATABASE_URL")
+
 
 def get_connection():
+    if DATABASE_URL:
+        import psycopg
+        from psycopg.rows import dict_row
+
+        return psycopg.connect(
+                DATABASE_URL,
+                row_factory=dict_row
+                )
+
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA foreign_keys = ON")
     return conn
 
+def execute(cursor, sql, params=()):
+    if DATABASE_URL:
+        sql = sql.replace("?", "%s")
+
+    return cursor.execute(sql, params)
 
 def init_db():
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("""
-    CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT UNIQUE NOT NULL,
-        password TEXT NOT NULL,
-        active INTEGER DEFAULT 1
-    )
-    """)
+    if DATABASE_URL:
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+            id SERIAL PRIMARY KEY,
+            name TEXT UNIQUE NOT NULL,
+            password TEXT NOT NULL,
+            active INTEGER DEFAULT 1
+        )
+        """)
 
-    cursor.execute("""
-    CREATE TABLE IF NOT EXISTS posts (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        title TEXT NOT NULL,
-        content TEXT,
-        user_id INTEGER,
-        active INTEGER DEFAULT 1
-    )
-    """)
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS posts (
+            id SERIAL PRIMARY KEY,
+            title TEXT NOT NULL,
+            content TEXT,
+            user_id INTEGER,
+            active INTEGER DEFAULT 1
+        )
+        """)
 
-    cursor.execute("""
-    CREATE TABLE IF NOT EXISTS newsletter (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        email TEXT UNIQUE NOT NULL,
-        active INTEGER DEFAULT 1
-    )
-    """)
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS newsletter (
+            id SERIAL PRIMARY KEY,
+            email TEXT UNIQUE NOT NULL,
+            active INTEGER DEFAULT 1
+        )
+        """)
+
+    else:
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT UNIQUE NOT NULL,
+            password TEXT NOT NULL,
+            active INTEGER DEFAULT 1
+        )
+        """)
+
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS posts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT NOT NULL,
+            content TEXT,
+            user_id INTEGER,
+            active INTEGER DEFAULT 1
+        )
+        """)
+
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS newsletter (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            email TEXT UNIQUE NOT NULL,
+            active INTEGER DEFAULT 1
+        )
+        """)
 
     conn.commit()
     conn.close()

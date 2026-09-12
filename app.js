@@ -1,4 +1,4 @@
-const API = https://api-igreja-xfmj.onrender.com
+const API = "https://api-igreja-xfmj.onrender.com"
 
 // ===== UI =====
 function show(msg) {
@@ -25,10 +25,13 @@ function authHeaders() {
 }
 
 // ===== LOGIN =====
+
 async function login() {
     const res = await fetch(API + "/users/login", {
         method: "POST",
-        headers: {"Content-Type": "application/json"},
+        headers: {
+            "Content-Type": "application/json"
+        },
         body: JSON.stringify({
             name: document.getElementById("name").value,
             password: document.getElementById("password").value
@@ -36,16 +39,9 @@ async function login() {
     })
 
     const data = await res.json()
-    console.log(data)
 
-    const token = data.data?.access_token || data.access_token
-
-    if (token) {
-        localStorage.setItem("token", token)
-        show("Login OK")
-    } else {
-        show("Erro no login")
-    }
+    show(JSON.stringify(data))
+    return
 }
 
 // ===== CREATE POST =====
@@ -75,39 +71,16 @@ async function createPost() {
     }
 }
 
-// ===== LIST POSTS =====
-async function loadPosts() {
-    const res = await fetch("http://localhost:8000/posts/")
-    const data = await res.json()
-
-    console.log("DATA:", data)
-
-    const list = document.getElementById("posts")
-    list.innerHTML = ""
-
-    const posts = data.data?.itens || []
-
-    posts.forEach(p => {
-        const li = document.createElement("li")
-
-        // ✅ agora é objeto
-        li.innerText = p.title + " - " + p.content
-
-        list.appendChild(li)
-    })
-}
 
 // ===== SUBSCRIBE =====
 async function subscribe() {
     const email = document.getElementById("email").value
 
-    // validação vem aqui
     if (!email.includes("@")) {
         show("Email inválido")
         return
     }
 
-    // só executa se passou na validação
     const res = await fetch(API + "/newsletter/", {
         method: "POST",
         headers: {
@@ -124,3 +97,39 @@ async function subscribe() {
         show(data.message || "Erro")
     }
 }
+
+
+// ===== LIST POSTS =====
+
+// ===== LIST POSTS =====
+
+async function loadPosts() {
+    const res = await fetch(API + "/posts/")
+    const data = await res.json()
+
+    console.log("DATA:", data)
+
+    const list = document.getElementById("posts")
+
+    if (!list) {
+        return
+    }
+
+    list.innerHTML = ""
+
+    const posts = data.items || []
+
+    posts.forEach(post => {
+        const artigo = document.createElement("article")
+
+        artigo.innerHTML = `
+            <h2>${post.title}</h2>
+            <p>${post.content}</p>
+            <small>Publicado por: ${post.user.name}</small>
+        `
+
+        list.appendChild(artigo)
+    })
+}
+
+loadPosts()

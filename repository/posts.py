@@ -1,16 +1,27 @@
-from core.db import get_connection
+from core.db import get_connection, execute, DATABASE_URL
 
 def create_post(title, content, user_id):
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("""
-    INSERT INTO posts (title, content, user_id, active)
-    VALUES (?, ?, ?, 1)
-                   """, (title, content, user_id))
+    if DATABASE_URL:
+        execute(cursor, """
+        INSERT INTO posts (title, content, user_id, active)
+        VALUES (?, ?, ?, 1)
+        RETURNING id
+        """, (title, content, user_id))
+
+        post_id = cursor.fetchone()["id"]
+
+    else:
+        execute(cursor, """
+        INSERT INTO posts (title, content, user_id, active)
+        VALUES (?, ?, ?, 1)
+        """, (title, content, user_id))
+
+        post_id = cursor.lastrowid
 
     conn.commit()
-    post_id = cursor.lastrowid
     conn.close()
 
     return post_id
@@ -45,7 +56,7 @@ def get_posts(limit, offset, title=None, order="asc"):
     query += " LIMIT ? OFFSET ? "
     params.extend([limit, offset])
 
-    cursor.execute(query, params)
+    execute(cursor, query, params)
     rows = cursor.fetchall()
 
     total = count_posts(title)
@@ -70,7 +81,7 @@ def delete_post(post_id):
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute(
+    execute(cursor, 
             "UPDATE posts SET active = 0 WHERE id = ?",
             (post_id,)
             )
@@ -83,13 +94,13 @@ def get_post(post_id):
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("""
+    execute(cursor, """
     SELECT
-        p.id,
-        p.title,
-        p.content,
-        u.id as user_id,
-        u.name
+    p.id,
+    p.title,
+    p.content,
+    u.id as user_id,
+    u.name
     FROM posts p
     JOIN users u ON p.user_id = u.id
     WHERE p.id = ? AND p.active = 1
@@ -116,8 +127,7 @@ def update_post(post_id, title, content):
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute(
-    """
+    execute(cursor,"""
     UPDATE posts
     SET title = ?, 
     content = ?
@@ -132,7 +142,7 @@ def get_post_raw(post_id):
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("""
+    execute(cursor,"""
     SELECT id, title, content, user_id
     FROM posts
     WHERE id = ? AND active = 1
@@ -148,21 +158,22 @@ def count_posts(title=None):
     conn = get_connection()
     cursor = conn.cursor()
 
-    query = """
-    SELECT COUNT(*)
-    FROM posts
-    WHERE active = 1
-    """
-
-    params = []
-
     if title:
-        query += " AND title LIKE ?"
-        params.append(f"%{title}%")
+        execute(cursor, """
+            SELECT COUNT(*) AS total
+            FROM posts
+            WHERE active = 1
+            AND title LIKE ?
+        """, (f"%{title}%",))
+    else:
+        execute(cursor, """
+            SELECT COUNT(*) AS total
+            FROM posts
+            WHERE active = 1
+        """)
 
-    cursor.execute(query, params)
-    total = cursor.fetchone()[0]
+    total = cursor.fetchone()["total"]
 
     conn.close()
-    
+
     return total
