@@ -34,7 +34,7 @@ def list_users(
 ):
     return user_service.list_users(limit, offset)
 
-@router.get("/{user_id}")
+@router.get("/{user_id}", response_model=UserResponse)
 def get_user(
     user_id: int,
     current_user: int = Depends(get_current_user)

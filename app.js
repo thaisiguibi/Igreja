@@ -5,6 +5,10 @@ function show(msg) {
     document.getElementById("msg").innerText = msg
 }
 
+function showAdminArea() {
+    document.getElementById("login-area").style.display = "none"
+    document.getElementById("admin-area").style.display = "block"
+}
 
 // ===== TOKEN =====
 
@@ -46,6 +50,7 @@ async function login() {
     if (res.ok) {
         localStorage.setItem("token", data.access_token)
         show("Login realizado")
+        showAdminArea()
     } else {
         show(data.message || "Erro ao fazer login")
     }
@@ -141,3 +146,18 @@ async function loadPosts() {
 }
 
 loadPosts()
+
+
+// ===== LOGOUT  =====
+
+function logout() {
+    localStorage.removeItem("token")
+
+    document.getElementById("admin-area").style.display = "none"
+    document.getElementById("login-area").style.display = "block"
+}
+
+
+if (localStorage.getItem("token")) {
+        showAdminArea()
+}

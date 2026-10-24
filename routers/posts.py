@@ -6,7 +6,7 @@ from core.security import get_current_user
 
 router = APIRouter(prefix="/posts")
 
-@router.get("/{post_id}")
+@router.get("/{post_id}", response_model=PostResponse)
 def get_post(post_id: int):
     return {
             "data":post_service.get_post(post_id),
