@@ -8,10 +8,7 @@ router = APIRouter(prefix="/posts")
 
 @router.get("/{post_id}", response_model=PostResponse)
 def get_post(post_id: int):
-    return {
-            "data":post_service.get_post(post_id),
-            "message":"Post found"
-            }
+    return post_service.get_post(post_id)
 
 @router.post("/")
 def create_post(
